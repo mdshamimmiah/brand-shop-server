@@ -98,7 +98,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('shop brand server is running')
+    res.send('shop brand server is running successfully')
 })
 
 app.listen(port, () => {

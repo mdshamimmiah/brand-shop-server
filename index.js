@@ -30,6 +30,7 @@ async function run() {
     await client.connect();
 
     const productCollection = client.db('productDB').collection('product');
+    const cartCollection = client.db('cartDB').collection('cart');
 
 
     app.get('/product', async(req, res) => {
@@ -83,7 +84,40 @@ app.put('/product/:id', async(req, res) => {
   res.send(result);
 })
 
+// Local
 
+// my cart
+app.get("/myCard", async (req, res) => {
+  const cursor = cartCollection.find();
+  const result = await cursor.toArray();
+  res.send(result);
+});
+
+app.get("/myCard/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await cartCollection.findOne(query);
+  res.send(result);
+});
+
+app.post("/myCard", async (req, res) => {
+  const newProduct = req.body;
+  console.log(newProduct);
+  const result = await cartCollection.insertOne(newProduct);
+  res.send(result);
+});
+// cart end
+
+
+// delete operation start
+app.delete('/myCard/:id', async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) }
+  const result = await cartCollection.deleteOne(query);
+  res.send(result);
+})
+
+// delete operation end
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -98,7 +132,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('shop brand server is running successfully')
+    res.send('shop brand server is running ')
 })
 
 app.listen(port, () => {
